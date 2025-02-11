@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>Dashboard</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tanggal</th>
+            <th>Pelapor</th>
+            <th>Endpoint / Deskripsi</th>
+            <th>Kategori</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for incident in incidents %}
+        <tr>
+            <td>{{ incident.id }}</td>
+            <td>{{ incident.date }}</td>
+            <td>{{ incident.reporter }}</td>
+            <td>
+                <strong>{{ incident.endpoint }}</strong><br>
+                {{ incident.description }}
+            </td>
+            <td>{{ incident.category }}</td>
+            <td>{{ incident.status }}</td>
+            <td>
+                <form action="{{ url_for('update_status', id=incident.id) }}" method="POST">
+                    <select name="status">
+                        <option value="Pending" {% if incident.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="In Progress" {% if incident.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Resolved" {% if incident.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
