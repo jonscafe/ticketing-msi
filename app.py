@@ -25,6 +25,7 @@ class Incident(db.Model):
     description = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(50), default='Pending')
+    responder = db.Column(db.String(80), nullable=True)  # Track who updated the status
 
 # Route: Dashboard (List all incidents)
 @app.route('/')
@@ -89,7 +90,8 @@ def report():
             endpoint=request.form['endpoint'],
             description=request.form['description'],
             category=request.form['category'],
-            status='Pending'
+            status='Pending',
+            responder=None  # No responder at first
         )
         db.session.add(new_incident)
         db.session.commit()
@@ -109,6 +111,7 @@ def update_status(id):
 
     incident = Incident.query.get_or_404(id)
     incident.status = request.form['status']
+    incident.responder = session['user']  # Track who responded
     db.session.commit()
     flash('Incident status updated!', 'success')
     return redirect(url_for('index'))
