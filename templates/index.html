@@ -11,6 +11,7 @@
             <th>Endpoint / Deskripsi</th>
             <th>Kategori</th>
             <th>Status</th>
+            <th>Responder</th>
             {% if role == 'Responder' %}
             <th>Action</th>
             {% endif %}
@@ -28,6 +29,7 @@
             </td>
             <td>{{ incident.category }}</td>
             <td>{{ incident.status }}</td>
+            <td>{{ incident.responder if incident.responder else 'Not Assigned' }}</td>
             {% if role == 'Responder' %}
             <td>
                 <form action="{{ url_for('update_status', id=incident.id) }}" method="POST">
